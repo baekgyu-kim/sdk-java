@@ -150,10 +150,15 @@ final class WorkflowClientRequestFactory {
       @Nonnull StartWorkflowExecutionRequestOrBuilder startParameters,
       @Nonnull String signalName,
       @Nullable Payloads signalInput) {
+    String requestId = startParameters.getRequestId();
+    if (requestId.isEmpty()) {
+      requestId = generateUniqueId();
+    }
+
     SignalWithStartWorkflowExecutionRequest.Builder request =
         SignalWithStartWorkflowExecutionRequest.newBuilder()
             .setNamespace(clientOptions.getNamespace())
-            .setRequestId(generateUniqueId())
+            .setRequestId(requestId)
             .setIdentity(clientOptions.getIdentity())
             .setSignalName(signalName)
             .setWorkflowRunTimeout(startParameters.getWorkflowRunTimeout())
